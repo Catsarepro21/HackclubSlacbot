@@ -17,3 +17,4 @@ A custom Slack bot built for Stardance using Node.js, Slack's Bolt framework, an
 4. Create a .env file with your slack creds ex. "SLACK_BOT_TOKEN=xoxb-your-bot-token"
 "SLACK_APP_TOKEN=xapp-your-app-token"
 5. Run with "node index.js"
+6. Make sure to add the commands to your slack app
