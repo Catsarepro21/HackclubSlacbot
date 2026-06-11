@@ -9,7 +9,6 @@ const app = new App({
   socketMode: true
 });
 
-// --- Existing Commands ---
 
 app.command("/rsb-ping", async ({ ack, respond }) => {
   const start = Date.now();
@@ -39,30 +38,37 @@ app.command("/rsb-countdown", async ({ command, ack, respond }) => {
   const targetDate = new Date(command.text);
   if (isNaN(targetDate)) return await respond({ text: "Invalid date format. Use YYYY-MM-DD." });
   const msLeft = targetDate - Date.now();
-  if (msLeft < 0) return await respond({ text: "The deadline is gone. Stop clinging to the past." });
+  if (msLeft < 0) return await respond({ text: "The deadline is gone. I guess you're happier now? or not." });
   await respond({ text: `Only ${Math.floor(msLeft / (1000 * 60 * 60 * 24))} days left. Tick tock.` });
 });
 
-// --- AI Integration with Debug Logging ---
+
+app.command("/rsb-help", async ({ ack, respond }) => {
+  await ack();
+  await respond({
+    text: [
+      "*Available commands for this digital construct:*",
+      "• `/rsb-ping` - Measures latency.",
+      "• `/rsb-quest` - Fetches a random side quest.",
+      "• `/rsb-coinflip` - Flips a coin.",
+      "• `/rsb-countdown [YYYY-MM-DD]` - Counts down to your inevitable deadlines.",
+      "• *Direct Messages:* Send a DM to the bot to chat with the Qwen2:0.5b AI(VERY SLOW. LIKE EXTREAMLY SLOW)."
+    ].join("\n")
+  });
+});
+
 
 app.message(async ({ message, say }) => {
-  // Ignore bots and empty messages
   if (message.subtype === 'bot_message' || !message.text) return;
 
   console.log(`[INFO] Received message from ${message.user}: "${message.text}"`);
 
   try {
-    console.log(`[PROCESS] Sending prompt to Qwen2:0.5b...`);
-    const start = Date.now();
-
     const response = await axios.post('http://127.0.0.1:11434/api/generate', {
       model: 'qwen2:0.5b',
       prompt: message.text,
       stream: false
     });
-
-    const duration = Date.now() - start;
-    console.log(`[SUCCESS] AI responded in ${duration}ms.`);
 
     await say(response.data.response || "The AI is speechless.");
   } catch (err) {
