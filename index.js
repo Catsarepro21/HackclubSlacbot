@@ -47,7 +47,7 @@ app.command("/rsb-help", async ({ ack, respond }) => {
   await ack();
   await respond({
     text: [
-      "*Available commands for this digital construct:*",
+      "*Available commands:*",
       "• `/rsb-ping` - Measures latency.",
       "• `/rsb-quest` - Fetches a random side quest.",
       "• `/rsb-coinflip` - Flips a coin.",
